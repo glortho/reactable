@@ -671,10 +671,7 @@
                 for (var j = 0; j < this.props.filterable.length; j++) {
                     var filterColumn = this.props.filterable[j];
 
-                    if (
-                        typeof(data[filterColumn]) !== 'undefined' &&
-                        data[filterColumn].toString().toLowerCase().indexOf(filter) > -1
-                    ) {
+                    if ( data[filterColumn] && data[filterColumn].toString().toLowerCase().indexOf(filter) > -1) {
                         matchedChildren.push(children[i]);
                         break;
                     }
