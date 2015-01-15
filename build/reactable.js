@@ -1,8 +1,5 @@
-
-/** @jsx React.DOM */
-"use strict";
-
 (function (root, factory) {
+    "use strict";
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['react'], factory);
@@ -16,6 +13,7 @@
         root.Reactable = factory(root.React);
     }
 }(this, function (React) {
+    "use strict";
     var exports = {};
 
     // Array.prototype.map polyfill - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Polyfill
@@ -26,7 +24,7 @@
         Array.prototype.map = function(callback, thisArg) {
             var T, A, k;
 
-            if (this == null) {
+            if (this === null) {
                 throw new TypeError(" this is null or not defined");
             }
 
@@ -84,7 +82,7 @@
             configurable: true,
             writable: true,
             value: function(predicate) {
-                if (this == null) {
+                if (this === null) {
                     throw new TypeError('Array.prototype.find called on null or undefined');
                 }
                 if (typeof predicate !== 'function') {
@@ -120,7 +118,6 @@
             configurable: true,
             writable: true,
             value: function(target, firstSource) {
-                "use strict";
                 if (target === undefined || target === null)
             throw new TypeError("Cannot convert first argument to object");
         var to = Object(target);
@@ -447,12 +444,11 @@
                 }
 
                 pageButtons.push(
-                    React.createElement("a", {className: className, key: i, 
-                       onClick: (function(pageNum) {
-                           return function() {
-                               this.props.onPageChange(pageNum);
-                           }.bind(this);
-                       }.bind(this))(i)}, i + 1)
+                  React.createElement("a", {
+                    className: className, 
+                    key: i, 
+                    onClick: this.props.onPageChange.bind(this, i)
+                  }, i + 1)
                 );
             }
 
@@ -461,13 +457,19 @@
                     React.createElement("tr", null, 
                         React.createElement("td", {colSpan: this.props.colSpan}, 
                              needPrev && 
-                              React.createElement("a", {className: "reactable-page-button reactable-page-prev", onClick: this.props.onPageChange.bind(this, this.props.currentPage - 1), key: "prev"}, "prev"), 
+                              React.createElement("span", null, 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-first", onClick: this.props.onPageChange.bind(this, 0), key: "first"}, "first"), 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-prev", onClick: this.props.onPageChange.bind(this, this.props.currentPage - 1), key: "prev"}, "prev")
+                              ), 
                             
 
                             pageButtons, 
 
                              needNext &&
-                              React.createElement("a", {className: "reactable-page-button reactable-page-next", onClick: this.props.onPageChange.bind(this, this.props.currentPage + 1), key: "next"}, "next")
+                              React.createElement("span", null, 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-next", onClick: this.props.onPageChange.bind(this, this.props.currentPage + 1), key: "next"}, "next"), 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-last", onClick: this.props.onPageChange.bind(this, this.props.numPages - 1), key: "last"}, "last")
+                              )
                             
                         )
                     )
@@ -599,8 +601,8 @@
             return initialState;
         },
         getCurrentSort: function(column) {
+          var columnName, sortDirection;
             if (column instanceof Object) {
-                var columnName, sortDirection;
 
                 if (typeof(column.column) !== 'undefined') {
                     columnName = column.column;
@@ -658,9 +660,9 @@
             if ( this.props.onFilter )
               this.props.onFilter( filter );
         },
-        applyFilter: function(filter, children) {
+        applyFilter: function(_filter, children) {
             // Helper function to apply filter text to a list of table rows
-            var filter = filter.toLowerCase();
+            var filter = _filter.toLowerCase();
             var matchedChildren = [];
 
             for (var i = 0; i < children.length; i++) {
@@ -779,7 +781,7 @@
                                 // Only add a new column if it doesn't already exist in the columns array
                                 if (
                                     columns.find(function(element) {
-                                        return element.key === column.key
+                                        return element.key === column.key;
                                     }) === undefined
                                 ) {
                                     columns.push(column);
@@ -825,7 +827,7 @@
             var currentChildren = filteredChildren;
             if (this.props.itemsPerPage > 0) {
                 itemsPerPage = this.props.itemsPerPage;
-                numPages = Math.ceil(filteredChildren.length / itemsPerPage)
+                numPages = Math.ceil(filteredChildren.length / itemsPerPage);
 
                 if (currentPage > numPages - 1) {
                     currentPage = numPages - 1;
@@ -842,8 +844,8 @@
             var props = filterPropsFrom(this.props);
 
             return React.createElement("table", React.__spread({},  props), [
-                (columns && columns.length > 0
-                    ? React.createElement(Thead, {columns: columns, 
+              (columns && columns.length > 0 ? 
+                      React.createElement(Thead, {columns: columns, 
                              filtering: filtering, 
                              onFilter: this.filterBy, 
                              currentFilter: this.state.filter, 
@@ -856,8 +858,8 @@
                 React.createElement("tbody", {className: "reactable-data", key: "tbody"}, 
                     currentChildren
                 ),
-                (pagination === true
-                    ? React.createElement(Paginator, {colSpan: columns.length, 
+                (pagination === true ? 
+                      React.createElement(Paginator, {colSpan: columns.length, 
                                  numPages: numPages, 
                                  currentPage: currentPage, 
                                  onPageChange: this.onPageChange, 
@@ -877,7 +879,7 @@
             }
         }
         return props;
-    };
+    }
 
     var internalProps = {
         columns: true,
@@ -888,7 +890,7 @@
         itemsPerPage: true,
         childNode: true,
         data: true
-    }
+    };
 
     return exports;
 }));
