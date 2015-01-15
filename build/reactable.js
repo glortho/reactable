@@ -436,7 +436,7 @@
 
             var pageButtons = [],
                 needPrev = this.props.numPages > 1 && this.props.currentPage > 0,
-                nextNext = this.props.numPages > 1 && this.props.currentPage < ( this.props.numPages - 1 );
+                needNext = this.props.numPages > 1 && this.props.currentPage < ( this.props.numPages - 1 );
 
             for (var i = 0; i < this.props.numPages; i++) {
                 var pageNum = i;
