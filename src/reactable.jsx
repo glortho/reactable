@@ -642,6 +642,9 @@
         },
         onPageChange: function(page) {
             this.setState({ currentPage: page });
+            debugger;
+            if ( this.props.onPageChange )
+              this.props.onPageChange( page );
         },
         filterBy: function(filter) {
             this.setState({ filter: filter });

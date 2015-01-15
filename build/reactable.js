@@ -304,9 +304,9 @@
             ) {
                 children = children.concat(this.props.columns.map(function(column, i) {
                     if (this.props.data.hasOwnProperty(column.key)) {
-                        return Td({column: column, key: column.key}, this.props.data[column.key]);
+                        return React.createElement(Td, {column: column, key: column.key}, this.props.data[column.key]);
                     } else {
-                        return Td({column: column, key: column.key});
+                        return React.createElement(Td, {column: column, key: column.key});
                     }
                 }.bind(this)));
             }
@@ -354,7 +354,7 @@
                 }
 
                 Ths.push(
-                    Th({className: sortClass, key: index, onClick: this.handleClickTh.bind(this, column)}, 
+                    React.createElement(Th, {className: sortClass, key: index, onClick: this.handleClickTh.bind(this, column)}, 
                         column.label
                     )
                 );
@@ -371,7 +371,7 @@
                         value: this.props.currentFilter
                     })
                 : ''),
-                React.DOM.tr({className: "reactable-column-header"}, Ths)
+                React.createElement("tr", {className: "reactable-column-header"}, Ths)
             );
         }
     });
@@ -380,10 +380,10 @@
         render: function() {
             if (this.props.children instanceof Unsafe) {
                 return this.transferPropsTo(
-                    React.DOM.th({dangerouslySetInnerHTML: {__html: this.props.children.toString()}})
+                    React.createElement("th", {dangerouslySetInnerHTML: {__html: this.props.children.toString()}})
                 );
             } else {
-                return this.transferPropsTo(React.DOM.th(null, this.props.children));
+                return this.transferPropsTo(React.createElement("th", null, this.props.children));
             }
         }
     });
@@ -394,7 +394,7 @@
         },
         render: function() {
             return (
-                React.DOM.input({type: "text", 
+                React.createElement("input", {type: "text", 
                        className: "reactable-filter-input", 
                        value: this.props.value, 
                        onKeyUp: this.onChange, 
@@ -410,9 +410,9 @@
             }
 
             return (
-                React.DOM.tr({className: "reactable-filterer"}, 
-                    React.DOM.td({colSpan: this.props.colSpan}, 
-                        FiltererInput({onFilter: this.props.onFilter, 
+                React.createElement("tr", {className: "reactable-filterer"}, 
+                    React.createElement("td", {colSpan: this.props.colSpan}, 
+                        React.createElement(FiltererInput, {onFilter: this.props.onFilter, 
                                        value: this.props.value})
                     )
                 )
@@ -443,7 +443,7 @@
                 }
 
                 pageButtons.push(
-                    React.DOM.a({className: className, key: i, 
+                    React.createElement("a", {className: className, key: i, 
                        // create function to get around for-loop closure issue
                        onClick: (function(pageNum) {
                            return function() {
@@ -454,9 +454,9 @@
             }
 
             return (
-                React.DOM.tbody({className: "reactable-pagination"}, 
-                    React.DOM.tr(null, 
-                        React.DOM.td({colSpan: this.props.colSpan}, 
+                React.createElement("tbody", {className: "reactable-pagination"}, 
+                    React.createElement("tr", null, 
+                        React.createElement("td", {colSpan: this.props.colSpan}, 
                             pageButtons
                         )
                     )
@@ -642,6 +642,9 @@
         },
         onPageChange: function(page) {
             this.setState({ currentPage: page });
+            debugger;
+            if ( this.props.onPageChange )
+              this.props.onPageChange( page );
         },
         filterBy: function(filter) {
             this.setState({ filter: filter });
@@ -685,7 +688,10 @@
                 keyB = stringable(keyB) ? keyB.toString() : '';
 
                 // Default sort
-                if (this._sortable[currentSort.column] === undefined || this._sortable[currentSort.column] === 'default') {
+                if (
+                    typeof(this._sortable[currentSort.column]) === 'undefined' ||
+                    this._sortable[currentSort.column] === 'default'
+                ) {
 
                     // Reverse direction if we're doing a reverse sort
                     if (keyA < keyB) {
@@ -774,7 +780,7 @@
                     }
 
                     return (
-                        Tr({columns: columns, key: i, data: data})
+                        React.createElement(Tr, {columns: columns, key: i, data: data})
                     );
                 }.bind(this)));
             }
@@ -826,9 +832,9 @@
             // Manually transfer props
             var props = filterPropsFrom(this.props);
 
-            return React.DOM.table(Object.assign({}, props), [
+            return React.createElement("table", React.__spread({},  props), [
                 (columns && columns.length > 0
-                    ? Thead({columns: columns, 
+                    ? React.createElement(Thead, {columns: columns, 
                              filtering: filtering, 
                              onFilter: this.filterBy, 
                              currentFilter: this.state.filter, 
@@ -838,11 +844,11 @@
                              key: "thead"})
                     : null
                 ),
-                React.DOM.tbody({className: "reactable-data", key: "tbody"}, 
+                React.createElement("tbody", {className: "reactable-data", key: "tbody"}, 
                     currentChildren
                 ),
                 (pagination === true
-                    ? Paginator({colSpan: columns.length, 
+                    ? React.createElement(Paginator, {colSpan: columns.length, 
                                  numPages: numPages, 
                                  currentPage: currentPage, 
                                  onPageChange: this.onPageChange, 
