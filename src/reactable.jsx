@@ -361,17 +361,50 @@
             // Manually transfer props
             var props = filterPropsFrom(this.props);
 
-            return React.DOM.thead(props,
-                (this.props.filtering === true ?
-                    Filterer({
-                        colSpan: this.props.columns.length,
-                        onFilter: this.props.onFilter,
-                        value: this.props.currentFilter
-                    })
-                : ''),
+            return (
+              <thead {...props}>
+                <tr className="reactable-filterer">
+                  <td colSpan={this.props.columns.length}>
+                    { this.props.filtering && 
+                      <Filterer
+                        onFilter = { this.props.onFilter }
+                        value    = { this.props.currentFilter }
+                      />
+                    }
+                    <LimitSelector {...this.props} />
+                  </td>
+                </tr>
                 <tr className="reactable-column-header">{Ths}</tr>
+              </thead>
             );
         }
+    });
+
+    var LimitSelector = React.createClass({
+      getDefaultProps: function() {
+        return {
+          limitOptions: [10, 25, 50, 100]
+        };
+      },
+
+      changeLimit: function( qty, event ) {
+        event.preventDefault();
+        if ( this.props.onLimitChange )
+          this.props.onLimitChange( qty );
+      },
+
+      render: function() {
+        return (
+          <span className='reactable-limit-selector'>
+            Rows per page: 
+            {this.props.limitOptions.map(function( item ) {
+              return (
+                <a className={ item == this.props.itemsPerPage ? 'reactable-limit-active' : '' } onClick={this.changeLimit.bind( this, item )}>{item}</a>
+              );
+            }.bind(this))}
+          </span>
+        );
+      }
     });
 
     var Th = exports.Th = React.createClass({
@@ -403,18 +436,11 @@
 
     var Filterer = React.createClass({
         render: function() {
-            if (typeof this.props.colSpan === 'undefined') {
-                throw new TypeError('Must pass a colSpan argument to Filterer');
-            }
-
-            return (
-                <tr className="reactable-filterer">
-                    <td colSpan={this.props.colSpan}>
-                        <FiltererInput onFilter={this.props.onFilter}
-                                       value={this.props.value} />
-                    </td>
-                </tr>
-            );
+          return (
+            <span>
+              <FiltererInput onFilter={this.props.onFilter} value={this.props.value} />
+            </span>
+          );
         }
     });
 
@@ -845,7 +871,8 @@
 
             return <table {...props}>{[
               (columns && columns.length > 0 ? 
-                      <Thead columns={columns}
+               <Thead        {...this.props}
+                             columns={columns}
                              filtering={filtering}
                              onFilter={this.filterBy}
                              currentFilter={this.state.filter}
