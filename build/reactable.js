@@ -434,7 +434,10 @@
                 throw new TypeError('Must pass a currentPage argument to Paginator');
             }
 
-            var pageButtons = [];
+            var pageButtons = [],
+                needPrev = this.props.numPages > 1 && this.props.currentPage > 0,
+                nextNext = this.props.numPages > 1 && this.props.currentPage < ( this.props.numPages - 1 );
+
             for (var i = 0; i < this.props.numPages; i++) {
                 var pageNum = i;
                 var className = "reactable-page-button";
@@ -444,7 +447,6 @@
 
                 pageButtons.push(
                     React.createElement("a", {className: className, key: i, 
-                       // create function to get around for-loop closure issue
                        onClick: (function(pageNum) {
                            return function() {
                                this.props.onPageChange(pageNum);
@@ -457,7 +459,15 @@
                 React.createElement("tbody", {className: "reactable-pagination"}, 
                     React.createElement("tr", null, 
                         React.createElement("td", {colSpan: this.props.colSpan}, 
-                            pageButtons
+                             needPrev && 
+                              React.createElement("a", {className: "reactable-page-button reactable-page-prev", onClick: this.props.onPageChange.bind(this, this.props.currentPage - 1), key: "prev"}, "prev"), 
+                            
+
+                            pageButtons, 
+
+                             needNext &&
+                              React.createElement("a", {className: "reactable-page-button reactable-page-next", onClick: this.props.onPageChange.bind(this, this.props.currentPage + 1), key: "next"}, "next")
+                            
                         )
                     )
                 )
@@ -642,12 +652,13 @@
         },
         onPageChange: function(page) {
             this.setState({ currentPage: page });
-            debugger;
             if ( this.props.onPageChange )
               this.props.onPageChange( page );
         },
         filterBy: function(filter) {
             this.setState({ filter: filter });
+            if ( this.props.onFilter )
+              this.props.onFilter( filter );
         },
         applyFilter: function(filter, children) {
             // Helper function to apply filter text to a list of table rows
@@ -731,6 +742,8 @@
             // Set the current sort and pass it to the sort function
             this.setState({ currentSort: currentSort });
             this.sortByCurrentSort();
+            if ( this.props.onSort )
+              this.props.onSort ( currentSort );
         },
         render: function() {
             var children = [];
