@@ -1,3 +1,4 @@
+
 /** @jsx React.DOM */
 "use strict";
 
@@ -585,11 +586,8 @@
         },
         getInitialState: function() {
             var initialState = {
-                currentPage: 0,
-                currentSort: {
-                    column: null,
-                    direction: 1
-                },
+                currentPage: this.props.currentPage - 1,
+                currentSort: this.props.currentSort,
                 filter: ''
             };
 
@@ -683,6 +681,7 @@
         sortByCurrentSort: function(){
             // Apply a sort function according to the current sort in the state.
             // This allows us to perform a default sort even on a non sortable column.
+            //var currentSort = this.state.currentSort;
             var currentSort = this.state.currentSort;
 
             if (currentSort.column === null) {
@@ -821,7 +820,7 @@
             var itemsPerPage = 0;
             var pagination = false;
             var numPages;
-            var currentPage = this.state.currentPage;
+            var currentPage = this.props.currentPage - 1;
 
             var currentChildren = filteredChildren;
             if (this.props.itemsPerPage > 0) {
