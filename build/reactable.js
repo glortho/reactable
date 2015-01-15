@@ -361,17 +361,50 @@
             // Manually transfer props
             var props = filterPropsFrom(this.props);
 
-            return React.DOM.thead(props,
-                (this.props.filtering === true ?
-                    Filterer({
-                        colSpan: this.props.columns.length,
-                        onFilter: this.props.onFilter,
-                        value: this.props.currentFilter
-                    })
-                : ''),
+            return (
+              React.createElement("thead", React.__spread({},  props), 
+                React.createElement("tr", {className: "reactable-filterer"}, 
+                  React.createElement("td", {colSpan: this.props.columns.length}, 
+                     this.props.filtering && 
+                      React.createElement(Filterer, {
+                        onFilter:  this.props.onFilter, 
+                        value:  this.props.currentFilter}
+                      ), 
+                    
+                    React.createElement(LimitSelector, React.__spread({},  this.props))
+                  )
+                ), 
                 React.createElement("tr", {className: "reactable-column-header"}, Ths)
+              )
             );
         }
+    });
+
+    var LimitSelector = React.createClass({displayName: 'LimitSelector',
+      getDefaultProps: function() {
+        return {
+          limitOptions: [10, 25, 50, 100]
+        };
+      },
+
+      changeLimit: function( qty, event ) {
+        event.preventDefault();
+        if ( this.props.onLimitChange )
+          this.props.onLimitChange( qty );
+      },
+
+      render: function() {
+        return (
+          React.createElement("span", {className: "reactable-limit-selector"}, 
+            "Rows per page:",  
+            this.props.limitOptions.map(function( item ) {
+              return (
+                React.createElement("a", {className:  item == this.props.itemsPerPage ? 'reactable-limit-active' : '', onClick: this.changeLimit.bind( this, item)}, item)
+              );
+            }.bind(this))
+          )
+        );
+      }
     });
 
     var Th = exports.Th = React.createClass({displayName: 'Th',
@@ -403,18 +436,11 @@
 
     var Filterer = React.createClass({displayName: 'Filterer',
         render: function() {
-            if (typeof this.props.colSpan === 'undefined') {
-                throw new TypeError('Must pass a colSpan argument to Filterer');
-            }
-
-            return (
-                React.createElement("tr", {className: "reactable-filterer"}, 
-                    React.createElement("td", {colSpan: this.props.colSpan}, 
-                        React.createElement(FiltererInput, {onFilter: this.props.onFilter, 
-                                       value: this.props.value})
-                    )
-                )
-            );
+          return (
+            React.createElement("span", null, 
+              React.createElement(FiltererInput, {onFilter: this.props.onFilter, value: this.props.value})
+            )
+          );
         }
     });
 
@@ -845,14 +871,15 @@
 
             return React.createElement("table", React.__spread({},  props), [
               (columns && columns.length > 0 ? 
-                      React.createElement(Thead, {columns: columns, 
+               React.createElement(Thead, React.__spread({},         this.props, 
+                             {columns: columns, 
                              filtering: filtering, 
                              onFilter: this.filterBy, 
                              currentFilter: this.state.filter, 
                              sort: this.state.currentSort, 
                              sortableColumns: this._sortable, 
                              onSort: this.onSort, 
-                             key: "thead"})
+                             key: "thead"}))
                     : null
                 ),
                 React.createElement("tbody", {className: "reactable-data", key: "tbody"}, 
