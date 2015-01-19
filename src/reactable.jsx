@@ -473,7 +473,7 @@
                   <a 
                     className = {className}
                     key       = {i}
-                    onClick   = {this.props.onPageChange.bind(this, i)}
+                    onClick   = {this.props.onPageChange.bind(null, i)}
                   >{i + 1}</a>
                 );
             }
@@ -484,8 +484,8 @@
                         <td colSpan={this.props.colSpan}>
                             { needPrev && 
                               <span>
-                                <a className='reactable-page-button reactable-page-first' onClick={this.props.onPageChange.bind(this, 0 )} key='first'>first</a>
-                                <a className='reactable-page-button reactable-page-prev' onClick={this.props.onPageChange.bind(this, this.props.currentPage - 1 )} key='prev'>prev</a>
+                                <a className='reactable-page-button reactable-page-first' onClick={this.props.onPageChange.bind(null, 0 )} key='first'>first</a>
+                                <a className='reactable-page-button reactable-page-prev' onClick={this.props.onPageChange.bind(null, this.props.currentPage - 1 )} key='prev'>prev</a>
                               </span>
                             }
 
@@ -493,8 +493,8 @@
 
                             { needNext &&
                               <span>
-                                <a className='reactable-page-button reactable-page-next' onClick={this.props.onPageChange.bind(this, this.props.currentPage + 1 )} key='next'>next</a>
-                                <a className='reactable-page-button reactable-page-last' onClick={this.props.onPageChange.bind(this, this.props.numPages - 1 )} key='last'>last</a>
+                                <a className='reactable-page-button reactable-page-next' onClick={this.props.onPageChange.bind(null, this.props.currentPage + 1 )} key='next'>next</a>
+                                <a className='reactable-page-button reactable-page-last' onClick={this.props.onPageChange.bind(null, this.props.numPages - 1 )} key='last'>last</a>
                               </span>
                             }
                         </td>

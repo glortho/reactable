@@ -473,7 +473,7 @@
                   React.createElement("a", {
                     className: className, 
                     key: i, 
-                    onClick: this.props.onPageChange.bind(this, i)
+                    onClick: this.props.onPageChange.bind(null, i)
                   }, i + 1)
                 );
             }
@@ -484,8 +484,8 @@
                         React.createElement("td", {colSpan: this.props.colSpan}, 
                              needPrev && 
                               React.createElement("span", null, 
-                                React.createElement("a", {className: "reactable-page-button reactable-page-first", onClick: this.props.onPageChange.bind(this, 0), key: "first"}, "first"), 
-                                React.createElement("a", {className: "reactable-page-button reactable-page-prev", onClick: this.props.onPageChange.bind(this, this.props.currentPage - 1), key: "prev"}, "prev")
+                                React.createElement("a", {className: "reactable-page-button reactable-page-first", onClick: this.props.onPageChange.bind(null, 0), key: "first"}, "first"), 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-prev", onClick: this.props.onPageChange.bind(null, this.props.currentPage - 1), key: "prev"}, "prev")
                               ), 
                             
 
@@ -493,8 +493,8 @@
 
                              needNext &&
                               React.createElement("span", null, 
-                                React.createElement("a", {className: "reactable-page-button reactable-page-next", onClick: this.props.onPageChange.bind(this, this.props.currentPage + 1), key: "next"}, "next"), 
-                                React.createElement("a", {className: "reactable-page-button reactable-page-last", onClick: this.props.onPageChange.bind(this, this.props.numPages - 1), key: "last"}, "last")
+                                React.createElement("a", {className: "reactable-page-button reactable-page-next", onClick: this.props.onPageChange.bind(null, this.props.currentPage + 1), key: "next"}, "next"), 
+                                React.createElement("a", {className: "reactable-page-button reactable-page-last", onClick: this.props.onPageChange.bind(null, this.props.numPages - 1), key: "last"}, "last")
                               )
                             
                         )
