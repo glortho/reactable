@@ -399,7 +399,7 @@
             "Rows per page:",  
             this.props.limitOptions.map(function( item ) {
               return (
-                React.createElement("a", {className:  item == this.props.itemsPerPage ? 'reactable-limit-active' : '', onClick: this.changeLimit.bind( this, item)}, item)
+                React.createElement("a", {className:  item == this.props.itemsPerPage ? 'reactable-limit-active' : '', onClick: this.changeLimit.bind( this, item), key: item}, item)
               );
             }.bind(this))
           )
@@ -410,11 +410,11 @@
     var Th = exports.Th = React.createClass({displayName: 'Th',
         render: function() {
             if (this.props.children instanceof Unsafe) {
-                return this.transferPropsTo(
-                    React.createElement("th", {dangerouslySetInnerHTML: {__html: this.props.children.toString()}})
+                return (
+                    React.createElement("th", React.__spread({},  this.props, {dangerouslySetInnerHTML: {__html: this.props.children.toString()}}))
                 );
             } else {
-                return this.transferPropsTo(React.createElement("th", null, this.props.children));
+                return (React.createElement("th", React.__spread({},  this.props), this.props.children));
             }
         }
     });

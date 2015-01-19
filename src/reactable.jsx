@@ -399,7 +399,7 @@
             Rows per page: 
             {this.props.limitOptions.map(function( item ) {
               return (
-                <a className={ item == this.props.itemsPerPage ? 'reactable-limit-active' : '' } onClick={this.changeLimit.bind( this, item )}>{item}</a>
+                <a className={ item == this.props.itemsPerPage ? 'reactable-limit-active' : '' } onClick={this.changeLimit.bind( this, item )} key={item}>{item}</a>
               );
             }.bind(this))}
           </span>
@@ -410,11 +410,11 @@
     var Th = exports.Th = React.createClass({
         render: function() {
             if (this.props.children instanceof Unsafe) {
-                return this.transferPropsTo(
-                    <th dangerouslySetInnerHTML={{__html: this.props.children.toString()}}/>
+                return (
+                    <th {...this.props} dangerouslySetInnerHTML={{__html: this.props.children.toString()}}/>
                 );
             } else {
-                return this.transferPropsTo(<th>{this.props.children}</th>);
+                return (<th {...this.props}>{this.props.children}</th>);
             }
         }
     });
