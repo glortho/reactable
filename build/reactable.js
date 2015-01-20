@@ -1,3 +1,4 @@
+
 (function (root, factory) {
     "use strict";
     if (typeof define === 'function' && define.amd) {
@@ -312,7 +313,11 @@
             // Manually transfer props
             var props = filterPropsFrom(this.props);
 
-            return React.DOM.tr(props, children);
+            return (
+              React.createElement("tr", React.__spread({},  this.props), 
+                children
+              )
+            );
         }
     });
 
@@ -332,7 +337,8 @@
         render: function() {
 
             // Declare the list of Ths
-            var Ths = [];
+          var Ths = [];
+
             for (var index = 0; index < this.props.columns.length; index++) {
                 var column = this.props.columns[index];
                 var sortClass = '';
@@ -371,6 +377,13 @@
                         value:  this.props.currentFilter}
                       ), 
                     
+                    this.props.foundCount &&
+                      React.createElement("span", null, 
+                        React.createElement("span", {className: "reactable-rows-found"},  this.props.foundCount), 
+                        React.createElement("span", null, " / ")
+                      ), 
+                    
+                    this.props.data.length + ' rows', 
                     React.createElement(LimitSelector, React.__spread({},  this.props))
                   )
                 ), 
@@ -462,21 +475,21 @@
                 needPrev = this.props.numPages > 1 && this.props.currentPage > 0,
                 needNext = this.props.numPages > 1 && this.props.currentPage < ( this.props.numPages - 1 );
 
-            for (var i = 0; i < this.props.numPages; i++) {
-                var pageNum = i;
-                var className = "reactable-page-button";
-                if (this.props.currentPage === i) {
-                    className += " reactable-current-page";
-                }
+            //for (var i = 0; i < this.props.numPages; i++) {
+                //var pageNum = i;
+                //var className = "reactable-page-button";
+                //if (this.props.currentPage === i) {
+                    //className += " reactable-current-page";
+                //}
 
-                pageButtons.push(
-                  React.createElement("a", {
-                    className: className, 
-                    key: i, 
-                    onClick: this.props.onPageChange.bind(null, i)
-                  }, i + 1)
-                );
-            }
+                //pageButtons.push(
+                  //<a 
+                    //className = {className}
+                    //key       = {i}
+                    //onClick   = {this.props.onPageChange.bind(null, i)}
+                  //>{i + 1}</a>
+                //);
+            //}
 
             return (
                 React.createElement("tbody", {className: "reactable-pagination"}, 
@@ -573,6 +586,11 @@
         },
         initialize: function(props) {
             this.data = props.data || [];
+            if ( this.data.length )
+              this.data.map(function(datum, index) {
+                datum._index = index + 1;
+                return datum;
+              });
             this.data = this.data.concat(this.parseChildData(props));
             this.initializeSorts(props);
         },
@@ -817,7 +835,7 @@
                     }
 
                     return (
-                        React.createElement(Tr, {columns: columns, key: i, data: data})
+                        React.createElement(Tr, {columns: columns, key: i, _index: i, index: 1, data: data})
                     );
                 }.bind(this)));
             }
@@ -839,9 +857,14 @@
             }
 
             // Apply filters
-            var filteredChildren = children;
+            var filteredChildren = children,
+                foundCount;
+
             if (this.state.filter !== '') {
                 filteredChildren = this.applyFilter(this.state.filter, filteredChildren);
+                foundCount = filteredChildren.length;
+            } else {
+              foundCount = null;
             }
 
             // Determine pagination properties and which columns to display
@@ -873,6 +896,7 @@
               (columns && columns.length > 0 ? 
                React.createElement(Thead, React.__spread({},         this.props, 
                              {columns: columns, 
+                             foundCount: foundCount, 
                              filtering: filtering, 
                              onFilter: this.filterBy, 
                              currentFilter: this.state.filter, 
