@@ -1,5 +1,3 @@
-
-
 (function (root, factory) {
     "use strict";
     if (typeof define === 'function' && define.amd) {
@@ -294,31 +292,41 @@
             childNode: Td,
             dataType: 'object'
         },
+
+        handleDoubleClick: function( event ) {
+          event.preventDefault();
+          this.props.onRowClick( this.props.data, this.props.data._index - 1 );
+        },
+
         render: function() {
-            var children = React.Children.children(this.props.children);
+          var children   = React.Children.children(this.props.children),
+              truncated  = this.props.data._warn_trunc,
+              truncClass = 'reactable-row-' + (
+                truncated ? 'truncated' : 'untruncated'
+              );
 
-            if (
-                this.props.data &&
-                this.props.columns &&
-                typeof this.props.columns.map === 'function'
-            ) {
-                children = children.concat(this.props.columns.map(function(column, i) {
-                    if (this.props.data.hasOwnProperty(column.key)) {
-                        return React.createElement(Td, {column: column, key: column.key}, this.props.data[column.key]);
-                    } else {
-                        return React.createElement(Td, {column: column, key: column.key});
-                    }
-                }.bind(this)));
-            }
+          if (
+              this.props.data &&
+              this.props.columns &&
+              typeof this.props.columns.map === 'function'
+          ) {
+              children = children.concat(this.props.columns.map(function(column, i) {
+                  if (this.props.data.hasOwnProperty(column.key)) {
+                      return React.createElement(Td, {column: column, key: column.key}, this.props.data[column.key]);
+                  } else {
+                      return React.createElement(Td, {column: column, key: column.key});
+                  }
+              }.bind(this)));
+          }
 
-            // Manually transfer props
-            var props = filterPropsFrom(this.props);
+          // Manually transfer props
+          var props = filterPropsFrom(this.props);
 
-            return (
-              React.createElement("tr", React.__spread({},  this.props), 
-                children
-              )
-            );
+          return (
+            React.createElement("tr", {onDoubleClick: this.handleDoubleClick, className: truncClass}, 
+              children
+            )
+          );
         }
     });
 
@@ -378,7 +386,7 @@
                         value:  this.props.currentFilter}
                       ), 
                     
-                    this.props.foundCount !== null &&
+                    this.props.foundCount &&
                       React.createElement("span", null, 
                         React.createElement("span", {className: "reactable-rows-found"},  this.props.foundCount), 
                         React.createElement("span", null, " / ")
@@ -831,7 +839,7 @@
                     }
 
                     return (
-                        React.createElement(Tr, {columns: columns, key: i, _index: i, index: 1, data: data})
+                        React.createElement(Tr, React.__spread({},  this.props, {columns: columns, key: i, _index: i, index: 1, data: data}))
                     );
                 }.bind(this)));
             }
