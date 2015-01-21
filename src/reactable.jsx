@@ -1,4 +1,5 @@
 
+
 (function (root, factory) {
     "use strict";
     if (typeof define === 'function' && define.amd) {
@@ -377,7 +378,7 @@
                         value    = { this.props.currentFilter }
                       />
                     }
-                    {this.props.foundCount &&
+                    {this.props.foundCount !== null &&
                       <span>
                         <span className='reactable-rows-found'>{ this.props.foundCount }</span>
                         <span> / </span>
@@ -586,11 +587,6 @@
         },
         initialize: function(props) {
             this.data = props.data || [];
-            if ( this.data.length )
-              this.data.map(function(datum, index) {
-                datum._index = index + 1;
-                return datum;
-              });
             this.data = this.data.concat(this.parseChildData(props));
             this.initializeSorts(props);
         },
