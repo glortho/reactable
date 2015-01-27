@@ -386,13 +386,13 @@
                         value    = { this.props.currentFilter }
                       />
                     }
-                    {this.props.foundCount &&
-                      <span>
-                        <span className='reactable-rows-found'>{ this.props.foundCount }</span>
-                        <span> / </span>
-                      </span>
-                    }
                     <span class="reactable-row-count">
+                      {this.props.foundCount &&
+                        <span>
+                          <span className='reactable-rows-found'>{ this.props.foundCount }</span>
+                          <span> / </span>
+                        </span>
+                      }
                       {this.props.data.length + ' rows'}
                     </span>
                     <LimitSelector {...this.props} />
