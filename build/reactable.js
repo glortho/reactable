@@ -392,7 +392,9 @@
                         React.createElement("span", null, " / ")
                       ), 
                     
-                    this.props.data.length + ' rows', 
+                    React.createElement("span", {class: "reactable-row-count"}, 
+                      this.props.data.length + ' rows'
+                    ), 
                     React.createElement(LimitSelector, React.__spread({},  this.props))
                   )
                 ), 

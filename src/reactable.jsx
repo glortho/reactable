@@ -392,7 +392,9 @@
                         <span> / </span>
                       </span>
                     }
-                    {this.props.data.length + ' rows'}
+                    <span class="reactable-row-count">
+                      {this.props.data.length + ' rows'}
+                    </span>
                     <LimitSelector {...this.props} />
                   </td>
                 </tr>
