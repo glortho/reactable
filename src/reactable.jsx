@@ -386,7 +386,7 @@
                         value    = { this.props.currentFilter }
                       />
                     }
-                    <span class="reactable-row-count">
+                    <span className="reactable-row-count">
                       {this.props.foundCount &&
                         <span>
                           <span className='reactable-rows-found'>{ this.props.foundCount }</span>

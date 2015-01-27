@@ -386,7 +386,7 @@
                         value:  this.props.currentFilter}
                       ), 
                     
-                    React.createElement("span", {class: "reactable-row-count"}, 
+                    React.createElement("span", {className: "reactable-row-count"}, 
                       this.props.foundCount &&
                         React.createElement("span", null, 
                           React.createElement("span", {className: "reactable-rows-found"},  this.props.foundCount), 
